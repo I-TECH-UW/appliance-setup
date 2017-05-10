@@ -70,7 +70,7 @@ deb-src http://apt.puppetlabs.com/ squeeze main\n""")
 
         # Install the latest version of Puppet
         subprocess.check_call(shlex.split(
-            'apt-get -y install facter puppet pwgen python-yaml'))
+            'apt-get -y --force-yes install facter puppet pwgen python-yaml'))
 
         with open(BOOTSTRAP_STAMP_FILE, 'w') as stamp_file:
             stamp_file.write(datetime.datetime.now().isoformat() +

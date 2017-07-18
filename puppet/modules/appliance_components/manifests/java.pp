@@ -5,7 +5,16 @@
 class appliance_components::java {
   include ::java
 
-  package { 'maven2':
-    ensure => installed,
+  case $lsbdistcodename {
+    xenial: {
+      package { 'maven':
+        ensure => installed,
+      }
+    }
+    default: {
+      package { 'maven2':
+        ensure => installed,
+      }
+    }
   }
 }

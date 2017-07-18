@@ -13,25 +13,49 @@ class appliance_components::apache {
   apache::mod { 'proxy_ajp': }
   apache::mod { 'rewrite': }
 
-  file { '/etc/apache2/sites-enabled/default-ssl':
-    ensure  => link,
-    target  => '/etc/apache2/sites-available/default-ssl',
-    require => [
-      Package['httpd'],
-      Package['ssl-cert'],
-    ],
-    notify  => Service['httpd'],
-  }
+  case $lsbdistcodename {
+    xenial: {
+	  file { '/etc/apache2/sites-enabled/default-ssl.conf':
+		ensure  => link,
+		target  => '/etc/apache2/sites-available/default-ssl.conf',
+		require => [
+		  Package['httpd'],
+		  Package['ssl-cert'],
+		],
+		notify  => Service['httpd'],
+	  }
 
-  file { '/etc/apache2/conf.d/redirect-ssl.conf':
-    ensure  => present,
-    source  => 'puppet:///modules/appliance_components/redirect-ssl.conf',
-    require => [
-      Package['httpd'],
-    ],
-    notify  => Service['httpd'],
-  }
+	  file { '/etc/apache2/conf.d/redirect-ssl.conf':
+		ensure  => present,
+		source  => 'puppet:///modules/appliance_components/files/redirect-ssl.conf',
+		require => [
+		  Package['httpd'],
+		],
+		notify  => Service['httpd'],
+	  }	
+	}
+	
+	default: {
+	  file { '/etc/apache2/sites-enabled/default-ssl':
+		ensure  => link,
+		target  => '/etc/apache2/sites-available/default-ssl',
+		require => [
+		  Package['httpd'],
+		  Package['ssl-cert'],
+		],
+		notify  => Service['httpd'],
+	  }
 
+	  file { '/etc/apache2/conf.d/redirect-ssl.conf':
+		ensure  => present,
+		source  => 'puppet:///modules/appliance_components/redirect-ssl.conf',
+		require => [
+		  Package['httpd'],
+		],
+		notify  => Service['httpd'],
+	  }
+    }
+  }
   package { 'ssl-cert':
     ensure => installed,
   }

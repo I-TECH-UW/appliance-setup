@@ -19,7 +19,7 @@ class appliance_components::postgresql {
   # Additional packages to install
 
   $packagelist = [
-    'postgresql-contrib-8.4',
+    'postgresql-contrib',
   ]
 
   package { $packagelist:

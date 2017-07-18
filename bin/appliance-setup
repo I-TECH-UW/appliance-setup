@@ -59,18 +59,22 @@ def bootstrap(force=False):
         os.makedirs(BOOTSTRAP_DIR)
 
     if not os.path.exists(BOOTSTRAP_STAMP_FILE):
-        with open('/etc/apt/sources.list.d/puppetlabs.list', 'w') as \
-            apt_sources:
-            apt_sources.write("""deb http://apt.puppetlabs.com/ squeeze main
-deb-src http://apt.puppetlabs.com/ squeeze main\n""")
-            apt_sources.write("""deb http://apt.puppetlabs.com precise dependencies\n""")
-        subprocess.check_call(shlex.split(
-            'apt-key adv --keyserver keyserver.ubuntu.com --recv 4BD6EC30'))
-        subprocess.check_call(shlex.split('apt-get update'))
+        import platform
+        if platform.system() == "Linux":
+            if platform.linux_distribution()[2] != "xenial":
+                with open('/etc/apt/sources.list.d/puppetlabs.list', 'w') as \
+                    apt_sources:
+                    apt_sources.write("""deb http://apt.puppetlabs.com/ squeeze main
+    deb-src http://apt.puppetlabs.com/ squeeze main\n""")
+                    apt_sources.write("""deb http://apt.puppetlabs.com precise dependencies\n""")
+                subprocess.check_call(shlex.split(
+                    'apt-key adv --keyserver keyserver.ubuntu.com --recv 4BD6EC30'))
 
-        # Install the latest version of Puppet
-        subprocess.check_call(shlex.split(
-            'apt-get -y --force-yes install facter puppet pwgen python-yaml'))
+            subprocess.check_call(shlex.split('apt-get update'))
+
+            # Install the latest version of Puppet
+            subprocess.check_call(shlex.split(
+                'apt-get -y --force-yes install facter puppet pwgen python-yaml'))
 
         with open(BOOTSTRAP_STAMP_FILE, 'w') as stamp_file:
             stamp_file.write(datetime.datetime.now().isoformat() +

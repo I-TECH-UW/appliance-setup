@@ -18,7 +18,7 @@
 	url = https://github.com/cirg/puppetlabs-apache.git
 [submodule "puppet/modules/postgresql"]
 	path = puppet/modules/postgresql
-	url = https://github.com/I-TECH-UW/puppetlabs-postgresql.git
+	url = https://github.com/cirg/puppet-postgresql.git
 [submodule "puppet/modules/tomcat"]
 	path = puppet/modules/tomcat
 	url = https://github.com/cirg/cirg-tomcat.git

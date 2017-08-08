@@ -1,6 +1,7 @@
 [submodule "puppet/modules/java"]
 	path = puppet/modules/java
-	url = https://github.com/cirg/puppetlabs-java.git
+	url = https://github.com/puppetlabs/puppetlabs-java.git
+  branch = 1.6.0
 [submodule "puppet/modules/stdlib"]
 	path = puppet/modules/stdlib
 	url = https://github.com/cirg/puppetlabs-stdlib.git

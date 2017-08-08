@@ -4,22 +4,27 @@
   branch = 1.6.0
 [submodule "puppet/modules/stdlib"]
 	path = puppet/modules/stdlib
-	url = https://github.com/cirg/puppetlabs-stdlib.git
+	url = https://github.com/puppetlabs/puppetlabs-stdlib.git
+  branch = 4.17.1
 [submodule "puppet/modules/mysql"]
 	path = puppet/modules/mysql
-	url = https://github.com/cirg/puppetlabs-mysql.git
+	url = https://github.com/puppetlabs/puppetlabs-mysql.git
+  branch = 3.11.0
 [submodule "puppet/modules/apt"]
 	path = puppet/modules/apt
-	url = https://github.com/cirg/puppetlabs-apt.git
+	url = https://github.com/puppetlabs/puppetlabs-apt.git
+  branch = 2.4.0
 [submodule "puppet/modules/openmrs"]
 	path = puppet/modules/openmrs
 	url = https://github.com/cirg/puppet-openmrs.git
 [submodule "puppet/modules/apache"]
 	path = puppet/modules/apache
-	url = https://github.com/cirg/puppetlabs-apache.git
+	url = https://github.com/puppetlabs/puppetlabs-apache.git
+  branch = 1.11.0
 [submodule "puppet/modules/postgresql"]
 	path = puppet/modules/postgresql
-	url = https://github.com/I-TECH-UW/puppetlabs-postgresql.git
+	url = https://github.com/puppetlabs/puppetlabs-postgresql.git
+  branch = 4.9.0
 [submodule "puppet/modules/tomcat"]
 	path = puppet/modules/tomcat
 	url = https://github.com/cirg/cirg-tomcat.git
@@ -28,7 +33,8 @@
 	url = https://github.com/cirg/puppet-module-locales.git
 [submodule "puppet/modules/vcsrepo"]
 	path = puppet/modules/vcsrepo
-	url = https://github.com/cirg/puppetlabs-vcsrepo.git
+	url = https://github.com/puppetlabs/puppetlabs-vcsrepo.git
+  branch = 1.5.0
 [submodule "puppet/modules/pump"]
 	path = puppet/modules/pump
 	url = http://github.com/cirg/puppet-pump

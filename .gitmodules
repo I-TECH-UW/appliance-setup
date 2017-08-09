@@ -41,3 +41,7 @@
 [submodule "puppet/modules/exim"]
 	path = puppet/modules/exim
 	url = http://github.com/cirg/puppet-exim
+[submodule "puppet/modules/concat"]
+	path = puppet/modules/concat
+	url = https://github.com/puppetlabs/puppetlabs-concat.git
+	branch = 2.2.1

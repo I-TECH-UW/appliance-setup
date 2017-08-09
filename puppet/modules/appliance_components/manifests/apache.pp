@@ -15,15 +15,6 @@ class appliance_components::apache {
 
   case $lsbdistcodename {
     xenial: {
-      file { '/etc/apache2/sites-enabled/default-ssl.conf':
-        ensure  => link,
-        target  => '/etc/apache2/sites-available/default-ssl.conf',
-        require => [
-          Package['apache2'],
-          Package['ssl-cert'],
-        ],
-        notify  => Service['apache2'],
-      }
       exec { "make-ssl-cert generate-default-snakeoil --force-overwrite":
         path => ["/usr/sbin", "/bin", "/usr/bin"]
       }
@@ -32,15 +23,6 @@ class appliance_components::apache {
         source  => 'puppet:///modules/appliance_components/redirect-ssl.conf',
         require => [
           Package['apache2'],
-        ],
-        notify  => Service['apache2'],
-      }
-      file { '/etc/apache2/conf-enabled/default-ssl':
-        ensure  => link,
-        target  => '/etc/apache2/conf-available/default-ssl',
-        require => [
-          Package['apache2'],
-          Package['ssl-cert'],
         ],
         notify  => Service['apache2'],
       }

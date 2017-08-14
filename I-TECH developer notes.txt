@@ -1,0 +1,17 @@
+Notes for cirg's appliance-setup tool
+
+These are notes I have made when working on these scripts to update for Ubuntu 16.04 Xenial. They are not any sort of official structured document, just things I discovered while learning puppet and the organization of this project.
+
+appliance-setup is a python 2 script that installs puppet and various puppet modules from git, then executes customized puppet scripts, some of which are written by cirg, some are official modules from puppetlabs
+
+The only modifications that should be made by developers to update puppet files are the files contained in appliance-setup/puppet/modules/appliance_components, unless there is no module provided by puppetlabs nor cirg. All of the other modules are imported from puppetlabs or cirg. In some cases the cirg modules should be replaced or updated from puppetlabs official sources. In other words, for example, do not hand-edit files in appliance-setup/puppet/modules/apache to make them work, they're from puppetlabs. Instead, place the customizations you need for apache in the appliance-setup/puppet/modules/appliance_components/manifests/apache.pp puppet file.
+
+xenial does not have python 2 installed by default
+
+xenial's default puppet version is version 3.x - puppetlabs has released puppetlabs 4.x in 2015, and puppet 5.x was released in June 2017.
+
+Several of the puppetlabs modules in git on github at (https://github.com/puppetlabs) have been updated to puppet 4 (and even 5), which can be incompatible with the puppet 3 scripts used by cirg's tool. 
+Finding the appropriate tag or branch involves going through the puppetlabs modules' changelogs for notes on what drops support for puppet 3 and setting .gitmodules branch attribute to the version before puppet 3 support is dropped. 
+This has been done for all cirg modules that were sourced from puppetlabs, and the sources have been updated to puppetlabs' git repositories instead of cirg's forks - this may introduce errors in situations where cirg has modified puppetlabs' modules, but should grant better compatibility across linux versions
+
+The tomcat module from cirg has been replaced with the puppetlabs tomcat module.

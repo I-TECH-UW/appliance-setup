@@ -27,7 +27,8 @@
 	branch = 4.9.0
 [submodule "puppet/modules/tomcat"]
 	path = puppet/modules/tomcat
-	url = https://github.com/cirg/cirg-tomcat.git
+	url = https://github.com/puppetlabs/puppetlabs-tomcat.git
+	branch = 1.7.0
 [submodule "puppet/modules/locales"]
 	path = puppet/modules/locales
 	url = https://github.com/cirg/puppet-module-locales.git

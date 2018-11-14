@@ -8,6 +8,8 @@ import shlex
 import stat
 import subprocess
 import sys
+import shutil
+import tomcat_config
 
 BOOTSTRAP_DIR = '/var/lib/appliance-setup'
 BOOTSTRAP_STAMP_FILE = os.path.join(BOOTSTRAP_DIR, 'bootstrap-stamp')
@@ -19,8 +21,11 @@ usage = """
 Usage: %s [OPTION...] <command>
 
 Options:
--h --help     display usage information
--v --verbose  provide verbose output
+-h --help       display usage information
+-v --verbose    provide verbose output
+--webapps=      where to place the webapps directory
+--clientcerts=  true or false to check for clientcerts
+--keystorepass= password for the keystore
 
 Commands:
 apply         configure the appliance
@@ -72,16 +77,17 @@ def bootstrap(force=False):
 
             subprocess.check_call(shlex.split('apt-get update'))
 
-            # Install the latest version of Puppet
+            # Install the latest version of Puppet and some required python libraries
             subprocess.check_call(shlex.split(
-                'apt-get -y --force-yes install facter puppet pwgen python-yaml'))
+                'apt-get -y --force-yes install facter puppet pwgen python-yaml python-lxml'))
 
         with open(BOOTSTRAP_STAMP_FILE, 'w') as stamp_file:
             stamp_file.write(datetime.datetime.now().isoformat() +
             '\n')
 
-def local_config():
+def local_config(options):
     """manages `local.yaml`, the local config file fed to puppet
+    
 
     Generates the local configuration file if necessary, merging any
     APPLIANCE_COMPONENTS values with the existing set found.
@@ -90,12 +96,13 @@ def local_config():
     Delete from local.yaml to force a change.
     
     """
+    
     # (python-yaml, brought in by bootstrap, should now be available)
     import yaml
 
     # The local and global configuration files
     lcf = os.path.join(script_base_dir,
-                       'puppet/etc/hieradb/local.yaml')
+                               'puppet/etc/hieradb/local.yaml')
     gcf = os.path.join(script_base_dir,
                                'puppet/etc/hieradb/global.yaml')
 
@@ -118,7 +125,32 @@ def local_config():
     # Require at least one component to go on
     if not len(config['classes']):
         available_components(require_one=True)
-
+        
+    # Configure webapp directory and whether to use client certs
+    for option,option_value in options:
+        if option == '--webapps':
+            if option_value == 'default':
+                if 'appliance_components::tomcat::web_parent_dir' in config:
+                    config.pop('appliance_components::tomcat::web_parent_dir')
+            else:
+                if os.path.exists(option_value):
+                    config['appliance_components::tomcat::web_parent_dir'] = option_value
+                else:
+                    print("'" + option_value + "' is not a directory.")
+                    print("continuing to use previously defined directory (or default if none exists)")
+        elif option == '--clientcerts':
+            if option_value == 'default':
+                if 'appliance_components::tomcat::use_client_certs' in config:
+                    config.pop('appliance_components::tomcat::use_client_certs')
+            else:
+                if str.lower(option_value) == 'false' or str.lower(option_value) == 'true':
+                    config['appliance_components::tomcat::use_client_certs'] = option_value
+                else:
+                    print("clientcerts value must be true or false. Using previously defined value (false by default)")
+        elif option == '--keystorepass':
+            config['appliance_components::tomcat::keystore_pass'] = option_value
+            
+            
     # See if a password exists before overwritting
     if 'mysql::server::config_hash' not in config:
         pwgen = subprocess.Popen(shlex.split('pwgen -s 10 -n1'),
@@ -231,6 +263,10 @@ def print_version(output=sys.stdout):
     else:
         print >> output, version
 
+#additional configurations not supported by puppet        
+def config_programs():
+    tomcat_config.config()
+        
 def update():
     cmds = ('git fetch',
             'git reset --hard @{u}',
@@ -270,7 +306,10 @@ script_base_dir = os.path.join(os.path.dirname(__file__), '..')
 if __name__ == "__main__":
     try:
         options, args = getopt.getopt(sys.argv[1:], 'hv', ['help',
-                                                           'verbose'])
+                                                           'verbose',
+                                                           'webapps=',
+                                                           'clientcerts=',
+                                                           'keystorepass='])
     except getopt.GetoptError, err:
         exit(error=str(err), status=2)
 
@@ -287,12 +326,13 @@ if __name__ == "__main__":
     arg = args.pop(0)
     if arg == 'apply':
         bootstrap()
-        local_config()
+        local_config(options)
         run_puppet_apply()
+        config_programs()
         print_version(VERSION_FILE)
     elif arg == 'bootstrap':
         bootstrap(force=True)
-        local_config()
+        local_config(options)
     elif arg == 'hiera':
         run_hiera(args)
     elif arg == 'list':

@@ -46,3 +46,6 @@
 	path = puppet/modules/concat
 	url = https://github.com/puppetlabs/puppetlabs-concat.git
 	branch = 2.2.1
+[submodule "puppet/modules/staging"]
+	path = puppet/modules/staging
+	url = https://github.com/voxpupuli/puppet-staging.git

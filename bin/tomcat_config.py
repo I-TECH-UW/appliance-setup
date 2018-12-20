@@ -109,6 +109,7 @@ def in_file(search_string, filename):
     f = open(filename)
     for line in f:
         if search_string in line:
+            f.close()
             return True
     return False
   

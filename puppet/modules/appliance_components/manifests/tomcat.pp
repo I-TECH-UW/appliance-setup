@@ -9,7 +9,6 @@ class appliance_components::tomcat(
   $web_application_name = "OpenELIS",
   $keystore_pass = "changeit",) {
   
-  
   $CATALINA_HOME = "/usr/share/tomcat8.5"
   $CATALINA_BASE = $CATALINA_HOME
   $web_app_dir = "webapplications"
@@ -254,7 +253,14 @@ class appliance_components::tomcat(
     source                => 'puppet:///modules/appliance_components/tomcatInstallInfo',
     require               => Tomcat::Install[$CATALINA_HOME],
   }
-  #TO-DO create init.d script
-  #Edit tomcatInstallInfo to reflect change
   
+  file { "/etc/systemd/system/tomcat.service":
+    ensure                => present,
+    owner                 => 'root',
+    group                 => 'root',
+    mode                  => '0644',
+    source                => 'puppet:///modules/appliance_components/tomcat.service',
+    require               => Tomcat::Install[$CATALINA_HOME],
+  }
+    
 }

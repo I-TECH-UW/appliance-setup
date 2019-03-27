@@ -14,6 +14,7 @@ def config():
     configure_web_xml()
     configure_catalina_properties()
     restrict_tomcat_files()
+    enable_tomcat_service()
     print("Done configuring tomcat")
 
 def remove_tomcat_extra_apps():
@@ -103,7 +104,27 @@ def restrict_tomcat_files():
     protect_files = subprocess.Popen(cmd.split(),
                               stdout=None,
                               stderr=None)
-    status = protect_files.wait()  
+    status = protect_files.wait() 
+
+def enable_tomcat_service():
+    print('Enabling Tomcat as a service...')
+    cmd= "sudo systemctl daemon-reload"
+    reload_daemons = subprocess.Popen(cmd.split(),
+                              stdout=None,
+                              stderr=None)
+    status = reload_daemons.wait()   
+    
+    cmd= "sudo systemctl start tomcat.service"
+    start_tomcat = subprocess.Popen(cmd.split(),
+                              stdout=None,
+                              stderr=None)
+    status = start_tomcat.wait()
+    
+    cmd= "sudo systemctl enable tomcat.service"
+    enablet_tomcat = subprocess.Popen(cmd.split(),
+                              stdout=None,
+                              stderr=None)
+    status = enablet_tomcat.wait()
     
 def in_file(search_string, filename):
     f = open(filename)

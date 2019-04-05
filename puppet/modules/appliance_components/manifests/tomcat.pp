@@ -21,7 +21,7 @@ class appliance_components::tomcat(
   
   #install tomcat from source
   tomcat::install { $CATALINA_HOME:
-    source_url => 'https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.34/bin/apache-tomcat-8.5.34.tar.gz',
+    source_url => 'https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.39/bin/apache-tomcat-8.5.39.tar.gz',
   }
 
   #set up instance of tomcat

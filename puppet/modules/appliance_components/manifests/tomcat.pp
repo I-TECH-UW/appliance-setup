@@ -21,7 +21,7 @@ class appliance_components::tomcat(
   
   #install tomcat from source
   tomcat::install { $CATALINA_HOME:
-    source_url => 'https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.34/bin/apache-tomcat-8.5.34.tar.gz',
+    source_url => 'https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.39/bin/apache-tomcat-8.5.39.tar.gz',
   }
 
   #set up instance of tomcat
@@ -65,16 +65,17 @@ class appliance_components::tomcat(
     protocol              => 'HTTP/1.1',
     additional_attributes => {
       'connectionTimeout'   => '20000',
-      'SSLEnabled'          => 'true',
-      'maxThreads'          => '150',
-      'scheme'              => 'https',
-      'secure'              => 'true',
-      'clientAuth'          => "${use_client_certs}",
-      'sslProtocol'         => 'TLS',
+      'URIEncoding'         => 'UTF-8',
       'xpoweredBy'          => 'false',
       'server'              => 'tomcat',
       'allowTrace'          => 'false',
       'maxHttpHeaderSize'   => '8192',
+      'maxThreads'          => '150',
+      'SSLEnabled'          => 'true',
+      'scheme'              => 'https',
+      'secure'              => 'true',
+      'clientAuth'          => "${use_client_certs}",
+      'sslProtocol'         => 'TLS',
       'keystorePass'        => "${keystore_pass}",
       'keystoreFile'        => "${keystore_file}",
     },
